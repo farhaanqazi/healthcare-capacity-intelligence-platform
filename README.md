@@ -6,7 +6,11 @@ models — demand forecasting, waiting-time regression, and breach-risk scoring 
 real public NHS data, with a production-grade test suite. Local-first and cloud-ready
 (SQLite → PostgreSQL), with a Gold layer ready to connect to Power BI.
 
-> **License:** MIT · **Python:** 3.12
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![Python](https://img.shields.io/badge/python-3.12-blue.svg)
+![ML](https://img.shields.io/badge/ML-XGBoost-orange.svg)
+![BI](https://img.shields.io/badge/BI-Power_BI-yellow.svg)
+![Tests](https://img.shields.io/badge/tests-14_gates-success.svg)
 
 ---
 
