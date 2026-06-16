@@ -9,8 +9,13 @@ import pytest  # noqa: E402
 from hcip import modeling as M  # noqa: E402
 
 
+import os
+import pandas as pd
+
 @pytest.fixture(scope="session")
 def df():
+    if os.environ.get("CI") == "true":
+        return pd.read_parquet(Path(__file__).parent / "tests" / "fixtures" / "sample_features.parquet")
     return M.load_features()
 
 

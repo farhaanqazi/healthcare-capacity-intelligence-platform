@@ -97,7 +97,8 @@ never worse than the baseline — is the methodological core of the project.
 │   ├── test_calibration_slices.py # Calibration (ECE/Brier) + per-segment AUC floors
 │   └── test_data_validation.py    # Pandera schema, grain uniqueness, reconciliation
 ├── conftest.py              # Shared fixtures (walk-forward windows, holdouts)
-├── docs/
+├── docs/                    # Documentation including the Power BI integration guide
+├── viz/                     # Power BI Dashboards (hcip.pbix)
 └── pyproject.toml
 ```
 
@@ -148,10 +149,13 @@ miscalibration, per-segment AUC drops, schema violations, or grain duplication.
 ## Business intelligence (Power BI)
 
 The Gold layer writes both a SQLite database (`data/gold/hcip_gold.db`) and Parquet exports
-(`data/gold/*.parquet`). In Power BI Desktop, **Get Data → Parquet** for each table, then
-join each fact key to its dimension key (`date_key`, `region_key`, `hospital_key`,
-`specialty_key`) to reproduce the star schema. In production, the same model points at the
-PostgreSQL warehouse — only the SQLAlchemy engine URL changes.
+(`data/gold/*.parquet`).
+
+A complete, pre-built Power BI dashboard is available at `viz/hcip.pbix`. This dashboard includes the full semantic model (Star Schema) linking the `fact_predictions` and `fact_waiting_list` tables to the hospital, specialty, and date dimensions. It features heatmaps for breach risk, demand forecasting trendlines, and scatter plots for worst-offenders.
+
+For instructions on how to connect your own Power BI environment from scratch or refresh the data connections, see the [Power BI Integration Guide](docs/powerbi_integration.md).
+
+In a production environment, the same model can be re-pointed at the PostgreSQL warehouse.
 
 ---
 
@@ -159,6 +163,7 @@ PostgreSQL warehouse — only the SQLAlchemy engine URL changes.
 
 - [x] Bronze → Silver → feature store → Gold pipeline (notebooks 01–07)
 - [x] Three ML models with honest baselines and a 14-gate test suite
+- [x] End-to-end Power BI Integration (`viz/hcip.pbix`)
 - [ ] Training script + model registry (persisted models, versioned metrics, `fact_predictions`)
 - [ ] FastAPI prediction service (`/predict-demand`, `/predict-wait-time`, `/predict-breach-risk`, `/health`, `/model-metrics`)
 - [ ] CI: run the test suite in GitHub Actions

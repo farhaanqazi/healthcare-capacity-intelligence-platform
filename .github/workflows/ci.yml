@@ -1,0 +1,36 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "latest"
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install Dependencies
+      run: |
+        uv pip install --system -e ".[dev]"
+
+    # NOTE: The below step assumes we implement a mechanism (like a tiny fixture sample)
+    # for the tests to run without the massive 2GB parquet file.
+    - name: Run Test Suite
+      env:
+        CI: "true"
+      run: |
+        uv run pytest tests/ -v

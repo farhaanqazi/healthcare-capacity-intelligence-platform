@@ -7,11 +7,13 @@ implementation.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
 from sklearn.metrics import brier_score_loss, mean_absolute_error, roc_auc_score
 from xgboost import XGBClassifier, XGBRegressor
+import pickle
 
 SEED = 42
 STANDARD = 0.92  # NHS 18-week standard: >=92% of pathways within 18 weeks
@@ -146,3 +148,17 @@ def expected_calibration_error(y_true: np.ndarray, proba: np.ndarray, n_bins: in
 
 def brier(y_true: np.ndarray, proba: np.ndarray) -> float:
     return float(brier_score_loss(np.asarray(y_true, dtype=int), np.asarray(proba, dtype=float)))
+
+
+def save_model(model: Any, path: Path | str) -> None:
+    """Serialize a trained model to disk."""
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with open(p, "wb") as f:
+        pickle.dump(model, f)
+
+
+def load_model(path: Path | str) -> Any:
+    """Load a serialized model from disk."""
+    with open(path, "rb") as f:
+        return pickle.load(f)
